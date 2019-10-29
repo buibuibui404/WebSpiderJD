@@ -16,7 +16,7 @@ import re
 
 header1 = "User-Agent","Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36"
 
-class item:
+class JDitem:
     def __init__(self, url):
         self.url = url
         self.values = {}
@@ -24,7 +24,40 @@ class item:
         tpR = urllib.request.Request(url)
         tpR.add_header(header1)
         self.html = urllib.request.urlopen(tpR).reead().decode('GBK')
+
     def findName(self):
+        n = re.search(r"商品名称：.*<", self.html).group(0)
+        n = n[5:-1]
+        self.values["name"] = {n}
+
+    def findMemo(self):
+        memo = re.search(r"运行内存：.*<", self.html).group(0)
+        memo = memo[5:-1]
+        self.values["memo"] = {memo}
+
+    def findBattery(self):
+        battery = re.search(r"电池容量（mAh）：.*<", self.html).group(0)
+        battery = battery[10:-1]
+        self.values["battery"] = battery
+    
+    def findColor(self):
+        color = re.search(r"机身颜色：.*<", self.html).group(0)
+        color = color[5:-1]
+        self.values["color"] = color
+
+    def findFront(self):
+        front = re.search(r"前摄主摄像素：.*<", self.html).group(0)
+        front = front[7:-1]
+        self.values["front"] = front
+
+    def findBack(self):
+        back = re.search(r"后摄主摄像素：.*<", self.html).group(0)
+        back = back[7:-1]
+        self.values["back"] = back
+
+    def getValue(self):
+        return self.values
+
 
 
 def craw():
